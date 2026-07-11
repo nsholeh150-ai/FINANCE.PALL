@@ -1,0 +1,1919 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Dashboard Keuangan Anak Muda Editable</title>
+  <style>
+    :root {
+      --bg: #eeedff;
+      --surface: #ffffff;
+      --surface-2: #f7f5ff;
+      --ink: #15132b;
+      --muted: #696680;
+      --line: #e3def8;
+      --purple: #7c5cff;
+      --purple-dark: #4a35bf;
+      --blue: #4f7cff;
+      --teal: #19a391;
+      --gold: #e7a333;
+      --rose: #e35f7e;
+      --green: #168a54;
+      --red: #c43d3d;
+      --shadow: 0 22px 58px rgba(48, 38, 132, 0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% -10%, #ffffff 0, rgba(255,255,255,0.72) 32%, rgba(255,255,255,0) 58%),
+        linear-gradient(180deg, #e9e7ff 0%, #f8f7ff 46%, #eeedff 100%);
+      color: var(--ink);
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+      align-items: end;
+      gap: 24px;
+      max-width: 1380px;
+      margin: 0 auto 20px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.02;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .title-block p {
+      max-width: 720px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .profile-control {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      min-width: min(100%, 360px);
+    }
+
+    .profile-control label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+
+    .profile-control select {
+      min-width: 230px;
+      height: 42px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 10px 26px rgba(48, 38, 132, 0.08);
+    }
+
+    .main-nav {
+      max-width: 1380px;
+      margin: 0 auto 20px;
+      padding: 6px;
+      border: 1px solid rgba(124, 92, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 18px 48px rgba(48, 38, 132, 0.1);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-button {
+      min-height: 44px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 760;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .nav-button.active {
+      background: linear-gradient(135deg, #7c5cff 0%, #9d8cff 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(124, 92, 255, 0.26);
+    }
+
+    .page-section {
+      display: none;
+      max-width: 1380px;
+      margin: 0 auto;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    .section-shell {
+      display: grid;
+      gap: 20px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(320px, 372px) minmax(0, 1fr);
+      gap: 20px;
+      max-width: 1380px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .input-panel {
+      position: sticky;
+      top: 18px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header h2,
+    .chart-card h2,
+    .advice-section h2,
+    .tool-card h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    .panel-header p,
+    .chart-card p,
+    .advice-section p,
+    .tool-card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .input-sections {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .save-panel {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid #ded8ff;
+      border-radius: 8px;
+      background: #f8f6ff;
+    }
+
+    .save-panel h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.3;
+      font-weight: 720;
+    }
+
+    .save-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .save-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .save-field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .save-field label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 720;
+      text-transform: uppercase;
+    }
+
+    .save-field input {
+      height: 38px;
+      width: 100%;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .save-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .save-actions button {
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .save-actions button.primary {
+      border-color: var(--purple);
+      background: var(--purple);
+      color: #ffffff;
+    }
+
+    .save-status {
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .input-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .input-group h3 {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .money-row {
+      display: grid;
+      grid-template-columns: minmax(110px, 1fr) minmax(0, 142px);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .money-row label,
+    .range-row label {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 620;
+      line-height: 1.3;
+    }
+
+    .money-row input,
+    .range-row input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfc;
+      color: var(--ink);
+    }
+
+    .money-row input {
+      height: 38px;
+      padding: 0 10px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .range-row {
+      display: grid;
+      grid-template-columns: 70px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .field-with-help {
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .info-button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: #ffffff;
+      color: var(--purple-dark);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .info-button:hover,
+    .info-button.active {
+      border-color: var(--purple);
+      background: #efeaff;
+    }
+
+    .info-text {
+      display: none;
+      padding: 10px;
+      border: 1px solid #ded8ff;
+      border-radius: 8px;
+      background: #fbfaff;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .info-text.active {
+      display: block;
+    }
+
+    .range-row output {
+      min-width: 54px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .range-row input[type="range"] {
+      accent-color: var(--teal);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .kpi-card {
+      min-height: 124px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 10px 30px rgba(23, 33, 27, 0.06);
+    }
+
+    .kpi-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .kpi-value {
+      margin: 10px 0 0;
+      font-size: clamp(20px, 2.4vw, 30px);
+      line-height: 1.05;
+      font-weight: 780;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .kpi-note {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .status-good { color: var(--green); }
+    .status-warn { color: var(--gold); }
+    .status-bad { color: var(--red); }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .chart-card {
+      min-height: 392px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 10px 30px rgba(23, 33, 27, 0.06);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+    }
+
+    .chart-title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .chart-frame {
+      width: 100%;
+      min-height: 320px;
+      margin-top: 16px;
+      display: grid;
+      align-items: center;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .axis,
+    .grid-line {
+      stroke: #dce5df;
+      stroke-width: 1;
+    }
+
+    .tick-label,
+    .legend text {
+      fill: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .bar-label,
+    .line-label {
+      fill: var(--ink);
+      font-size: 12.5px;
+      font-weight: 650;
+    }
+
+    .axis-title {
+      fill: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .tool-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .tool-card.soft {
+      background: linear-gradient(135deg, #ffffff 0%, #f7f5ff 100%);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: minmax(130px, 1fr) minmax(0, 180px);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .form-row label {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+
+    .form-row input,
+    .form-row select {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .result-card {
+      min-height: 116px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .result-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    .result-value {
+      margin: 8px 0 0;
+      color: var(--ink);
+      font-size: clamp(20px, 2.4vw, 30px);
+      line-height: 1.08;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .result-note {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .progress-track {
+      height: 14px;
+      margin-top: 16px;
+      border-radius: 999px;
+      background: #ebe7ff;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--purple) 0%, var(--teal) 100%);
+    }
+
+    .tip-list,
+    .source-list {
+      display: grid;
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tip-list li,
+    .source-list li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .calc-tip-button {
+      display: grid;
+      gap: 4px;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .calc-tip-button strong {
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .calc-tip-button span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .tip-list li.active {
+      border-color: var(--purple);
+      background: #f4f0ff;
+      box-shadow: 0 10px 24px rgba(124, 92, 255, 0.12);
+    }
+
+    .calc-panel {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid #d9d0ff;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f5ff 100%);
+    }
+
+    .calc-panel h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    .calc-highlight {
+      margin: 0;
+      color: var(--purple-dark);
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1.08;
+      font-weight: 820;
+      overflow-wrap: anywhere;
+    }
+
+    .calc-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .detail-card {
+      min-height: 136px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .detail-card strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .detail-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .source-list a {
+      color: var(--purple-dark);
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .advice-section {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #f7fbf9 100%);
+      box-shadow: 0 10px 30px rgba(23, 33, 27, 0.06);
+    }
+
+    .advice-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .advice-tabs {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #eef4f1;
+    }
+
+    .tab-button {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .tab-button.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 6px 18px rgba(23, 33, 27, 0.08);
+    }
+
+    .advice-panel {
+      margin-top: 14px;
+    }
+
+    .advice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .advice-card {
+      min-height: 132px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .advice-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .advice-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .quote-card {
+      min-height: 170px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.42;
+      font-weight: 720;
+    }
+
+    .quote-card cite {
+      color: var(--teal);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 760;
+    }
+
+    .quote-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .action-strip {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #17211b;
+      color: #f7fbf9;
+      box-shadow: var(--shadow);
+    }
+
+    .action-strip p {
+      margin: 0;
+      color: #d8e2dc;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .action-strip strong {
+      color: #ffffff;
+    }
+
+    .reset-button {
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 8px;
+      background: #24332b;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .small-note {
+      max-width: 1380px;
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1100px) {
+      .workspace,
+      .chart-grid,
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .input-panel {
+        position: static;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .advice-header,
+      .quote-grid,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .main-nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-shell {
+        padding: 14px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+      }
+
+      .profile-control,
+      .profile-control select {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .advice-tabs {
+        width: 100%;
+      }
+
+      .tab-button {
+        flex: 1;
+      }
+
+      .kpi-grid,
+      .advice-grid,
+      .result-grid,
+      .main-nav {
+        grid-template-columns: 1fr;
+      }
+
+      .money-row,
+      .range-row,
+      .form-row,
+      .save-row,
+      .action-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .range-row output {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="title-block">
+        <h1>Dashboard Keuangan Anak Muda</h1>
+        <p>Kalkulator editable untuk pelajar, mahasiswa, dan first jobber. Semua angka bisa diganti agar cocok dipakai di kelas, workshop literasi finansial, atau perencanaan pribadi.</p>
+      </div>
+      <div class="profile-control">
+        <label for="profilePreset">Preset</label>
+        <select id="profilePreset">
+          <option value="pelajar">Pelajar</option>
+          <option value="mahasiswa">Mahasiswa</option>
+          <option value="firstJobber">First Jobber</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+    </header>
+
+    <nav class="main-nav" aria-label="Menu dashboard">
+      <button class="nav-button active" type="button" data-main-section="dashboard">Dashboard</button>
+      <button class="nav-button" type="button" data-main-section="saving">Menabung</button>
+      <button class="nav-button" type="button" data-main-section="future">Masa Depan</button>
+    </nav>
+
+    <section class="page-section active" id="sectionDashboard" data-section="dashboard">
+    <section class="workspace">
+      <aside class="panel input-panel">
+        <div class="panel-header">
+          <h2>Input angka</h2>
+          <p>Ubah pemasukan, pengeluaran, dana darurat, dan porsi investasi.</p>
+        </div>
+        <div class="input-sections">
+          <div class="save-panel">
+            <h3>Simpan ke database</h3>
+            <p>Isi nama terlebih dahulu. Nama ini menjadi kunci akses untuk menyimpan dan membuka ulang data finance.</p>
+            <div class="save-row">
+              <div class="save-field"><label for="ownerName">Nama akses</label><input id="ownerName" type="text" maxlength="80" placeholder="contoh: nabila putri"></div>
+              <div class="save-field"><label for="planName">Nama rencana</label><input id="planName" type="text" maxlength="80" value="Budget Pelajar"></div>
+            </div>
+            <input id="saveCode" type="hidden" value="">
+            <div class="save-status" id="accessCodePreview">Kode akses akan dibuat otomatis dari nama.</div>
+            <div class="save-actions">
+              <button class="primary" id="saveToDatabase" type="button">Simpan</button>
+              <button id="loadFromDatabase" type="button">Muat</button>
+              <button id="clearAccessName" type="button">Ganti nama</button>
+            </div>
+            <div class="save-status" id="saveStatus">Database Supabase siap. Gunakan nama yang unik agar data tidak tertukar.</div>
+          </div>
+
+          <div class="input-group">
+            <h3>Pemasukan bulanan</h3>
+            <div class="money-row"><label for="incomeAllowance">Uang saku / beasiswa</label><input id="incomeAllowance" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="incomePartTime">Kerja paruh waktu</label><input id="incomePartTime" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="incomeProject">Freelance / proyek</label><input id="incomeProject" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="incomeOther">Lainnya</label><input id="incomeOther" type="number" min="0" step="10000"></div>
+          </div>
+
+          <div class="input-group">
+            <h3>Pengeluaran bulanan</h3>
+            <div class="money-row"><label for="expenseFood">Makan & transport</label><input id="expenseFood" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="expenseSchool">Sekolah / kuliah</label><input id="expenseSchool" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="expenseInternet">Internet / kuota</label><input id="expenseInternet" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="expenseFamily">Bantu keluarga</label><input id="expenseFamily" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="expenseFun">Hiburan / nongkrong</label><input id="expenseFun" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="expenseShopping">Belanja pribadi</label><input id="expenseShopping" type="number" min="0" step="10000"></div>
+            <div class="money-row"><label for="expenseSubs">Langganan digital</label><input id="expenseSubs" type="number" min="0" step="10000"></div>
+          </div>
+
+          <div class="input-group">
+            <h3>Target</h3>
+            <div class="money-row"><label for="emergencyNow">Dana darurat saat ini</label><input id="emergencyNow" type="number" min="0" step="10000"></div>
+            <div class="field-with-help"><label for="emergencyMonths">Target bulan biaya hidup</label><button class="info-button" type="button" data-info-target="emergencyMonthsInfo" aria-label="Penjelasan target bulan biaya hidup">?</button></div>
+            <div class="range-row"><output id="emergencyMonthsOut">3x</output><input id="emergencyMonths" type="range" min="1" max="12" step="1"></div>
+            <div class="info-text" id="emergencyMonthsInfo">Angka ini berarti berapa bulan biaya hidup yang ingin ditutup oleh dana darurat. Contoh 3x berarti dana darurat ideal setara tiga bulan pengeluaran bulanan.</div>
+            <div class="field-with-help"><label for="investRate">Investasi dari pemasukan</label><button class="info-button" type="button" data-info-target="investRateInfo" aria-label="Penjelasan investasi dari pemasukan">?</button></div>
+            <div class="range-row"><output id="investRateOut">5%</output><input id="investRate" type="range" min="0" max="30" step="1"></div>
+            <div class="info-text" id="investRateInfo">Persentase ini adalah rencana investasi dari total pemasukan bulanan. Untuk pelajar, mulai kecil dan prioritaskan dana darurat sebelum menaikkan investasi.</div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="dashboard-grid">
+        <section class="kpi-grid" aria-label="Ringkasan keuangan">
+          <article class="kpi-card"><p class="kpi-label">Pemasukan</p><p class="kpi-value" id="kpiIncome">Rp0</p><p class="kpi-note">Total uang masuk per bulan.</p></article>
+          <article class="kpi-card"><p class="kpi-label">Sisa uang</p><p class="kpi-value" id="kpiSurplus">Rp0</p><p class="kpi-note" id="surplusNote">Belum dihitung.</p></article>
+          <article class="kpi-card"><p class="kpi-label">Rasio simpan</p><p class="kpi-value" id="kpiSaveRate">0%</p><p class="kpi-note">Target sehat awal: 10-20%.</p></article>
+          <article class="kpi-card"><p class="kpi-label">Dana darurat</p><p class="kpi-value" id="kpiEmergency">0%</p><p class="kpi-note" id="emergencyNote">Belum dihitung.</p></article>
+        </section>
+
+        <section class="chart-grid">
+          <article class="chart-card">
+            <h2>Pie chart alokasi uang</h2>
+            <p>Kebutuhan, keinginan, tabungan tunai, dan investasi.</p>
+            <div class="chart-frame" id="donutChart"></div>
+          </article>
+          <article class="chart-card">
+            <h2>Diagram batang pengeluaran</h2>
+            <p>Kategori pengeluaran terbesar langsung terlihat.</p>
+            <div class="chart-frame" id="expenseChart"></div>
+          </article>
+          <article class="chart-card">
+            <h2>Sumber pemasukan</h2>
+            <p>Membantu pelajar melihat sumber yang paling bisa dikembangkan.</p>
+            <div class="chart-frame" id="incomeChart"></div>
+          </article>
+          <article class="chart-card">
+            <div class="chart-title-row">
+              <div>
+                <h2>Proyeksi dana darurat</h2>
+                <p>Estimasi 12 bulan jika sisa uang dialihkan untuk buffer.</p>
+              </div>
+              <button class="info-button" type="button" data-info-target="projectionInfo" aria-label="Penjelasan proyeksi dana darurat">?</button>
+            </div>
+            <div class="info-text" id="projectionInfo">Grafik ini memperkirakan pertumbuhan dana darurat selama 12 bulan. Garis putus-putus adalah target, sedangkan garis hijau menunjukkan posisi dana darurat jika sisa uang bulanan terus disimpan.</div>
+            <div class="chart-frame" id="projectionChart"></div>
+          </article>
+        </section>
+
+        <section class="action-strip">
+          <p><strong id="healthTitle">Status belum dihitung.</strong><br><span id="healthAdvice">Masukkan angka untuk melihat saran.</span></p>
+          <button class="reset-button" id="resetButton" type="button">Reset preset</button>
+        </section>
+
+        <section class="advice-section">
+          <div class="advice-header">
+            <div>
+              <h2>Saran & quotes pengelolaan uang</h2>
+              <p>Prinsip praktis untuk pelajar, ditambah kutipan singkat dari tokoh ekonomi dan penulis finansial.</p>
+            </div>
+            <div class="advice-tabs" role="tablist" aria-label="Tab saran keuangan">
+              <button class="tab-button active" id="tabPraktis" type="button" role="tab" aria-selected="true" aria-controls="advicePractical" data-advice-tab="praktis">Saran praktis</button>
+              <button class="tab-button" id="tabQuotes" type="button" role="tab" aria-selected="false" aria-controls="adviceQuotes" data-advice-tab="quotes">Quotes ekonomi</button>
+            </div>
+          </div>
+          <div class="advice-panel active" id="advicePractical" role="tabpanel" aria-labelledby="tabPraktis" data-advice-panel="praktis">
+            <div class="advice-grid">
+              <article class="advice-card"><strong>Bayar diri sendiri dulu</strong><span>Sisihkan uang tabungan begitu uang masuk. Terinspirasi dari The Richest Man in Babylon dan The Automatic Millionaire.</span></article>
+              <article class="advice-card"><strong>Otomatiskan sistem</strong><span>Pisahkan rekening kebutuhan, main, dana darurat, dan investasi. Terinspirasi dari I Will Teach You To Be Rich.</span></article>
+              <article class="advice-card"><strong>Belanja sesuai nilai</strong><span>Kurangi biaya yang tidak penting, bukan semua kesenangan. Terinspirasi dari Your Money or Your Life.</span></article>
+              <article class="advice-card"><strong>Bangun margin aman</strong><span>Jaga uang cadangan karena hidup tidak selalu sesuai rencana. Terinspirasi dari The Psychology of Money.</span></article>
+              <article class="advice-card"><strong>Beresi utang konsumtif</strong><span>Hindari cicilan gaya hidup sebelum buffer aman. Terinspirasi dari The Total Money Makeover.</span></article>
+              <article class="advice-card"><strong>Investasi sederhana</strong><span>Mulai rutin, kecil, dan konsisten setelah kebutuhan dasar aman. Terinspirasi dari The Simple Path to Wealth.</span></article>
+            </div>
+          </div>
+          <div class="advice-panel" id="adviceQuotes" role="tabpanel" aria-labelledby="tabQuotes" data-advice-panel="quotes" hidden>
+            <div class="quote-grid">
+              <article class="quote-card"><blockquote>"save and accumulate some part of what they acquire"</blockquote><cite>Adam Smith, The Wealth of Nations</cite><span>Maknanya untuk pelajar: sisihkan sebagian pemasukan sebelum uang habis untuk konsumsi harian.</span></article>
+              <article class="quote-card"><blockquote>"An investment in knowledge pays the best interest."</blockquote><cite>Benjamin Franklin</cite><span>Mulai dari literasi finansial: paham anggaran, bunga, risiko, dan produk keuangan sebelum mengejar return.</span></article>
+              <article class="quote-card"><blockquote>"Don't look for the needle in the haystack. Just buy the haystack!"</blockquote><cite>John C. Bogle</cite><span>Pelajaran utamanya: diversifikasi dan konsistensi sering lebih penting daripada menebak pemenang pasar.</span></article>
+              <article class="quote-card"><blockquote>"There is no such thing as a free lunch."</blockquote><cite>Prinsip biaya peluang ekonomi</cite><span>Setiap pilihan punya biaya: nongkrong, langganan, cicilan, dan investasi semua perlu ruang dalam anggaran.</span></article>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+    </section>
+
+    <section class="page-section" id="sectionSaving" data-section="saving">
+      <div class="section-shell">
+        <section class="tool-grid">
+          <article class="tool-card soft">
+            <h2>Menu Menabung Barang atau Trip</h2>
+            <p>Tentukan target yang ingin dibeli, uang yang sudah ada, dan tanggal tujuan. Angka bisa diedit sendiri.</p>
+            <div class="form-grid">
+              <div class="form-row"><label for="savingGoalName">Nama target</label><input id="savingGoalName" type="text" value="Trip akhir semester" maxlength="80"></div>
+              <div class="form-row"><label for="savingTargetAmount">Harga target</label><input id="savingTargetAmount" type="number" min="0" step="10000" value="2500000"></div>
+              <div class="form-row"><label for="savingCurrentAmount">Tabungan sekarang</label><input id="savingCurrentAmount" type="number" min="0" step="10000" value="350000"></div>
+              <div class="form-row"><label for="savingTargetDate">Tanggal target</label><input id="savingTargetDate" type="date"></div>
+              <div class="form-row"><label for="savingDailyAbility">Mampu nabung per hari</label><input id="savingDailyAbility" type="number" min="0" step="1000" value="25000"></div>
+            </div>
+          </article>
+          <article class="tool-card">
+            <h2>Rencana menabung</h2>
+            <p id="savingSummary">Masukkan target untuk melihat rincian hari dan tabungan harian.</p>
+            <div class="result-grid">
+              <article class="result-card"><p class="result-label">Sisa target</p><p class="result-value" id="savingRemaining">Rp0</p><p class="result-note">Nominal yang masih perlu dikumpulkan.</p></article>
+              <article class="result-card"><p class="result-label">Nabung / hari</p><p class="result-value" id="savingDailyNeed">Rp0</p><p class="result-note">Agar tercapai pada tanggal target.</p></article>
+              <article class="result-card"><p class="result-label">Butuh waktu</p><p class="result-value" id="savingDaysNeeded">0 hari</p><p class="result-note">Jika memakai kemampuan nabung per hari.</p></article>
+            </div>
+            <div class="progress-track" aria-label="Progres tabungan"><div class="progress-fill" id="savingProgress"></div></div>
+            <ul class="tip-list" id="savingAdviceList" aria-label="Saran menabung yang bisa dihitung">
+              <li class="active" data-saving-advice-item="daily"><button class="calc-tip-button" type="button" data-saving-advice="daily"><strong>Otomatis harian</strong><span>Hitung nominal harian agar target tercapai tepat tanggal.</span></button></li>
+              <li data-saving-advice-item="weekly"><button class="calc-tip-button" type="button" data-saving-advice="weekly"><strong>Milestone mingguan</strong><span>Pecah sisa target menjadi target mingguan yang lebih mudah dipantau.</span></button></li>
+              <li data-saving-advice-item="buffer"><button class="calc-tip-button" type="button" data-saving-advice="buffer"><strong>Tambah buffer 15%</strong><span>Cocok untuk trip atau barang dengan biaya tambahan tidak terduga.</span></button></li>
+              <li data-saving-advice-item="ability"><button class="calc-tip-button" type="button" data-saving-advice="ability"><strong>Ikuti kemampuan harian</strong><span>Hitung kapan target tercapai jika menabung sesuai kemampuan saat ini.</span></button></li>
+            </ul>
+            <article class="calc-panel" aria-live="polite">
+              <h3 id="savingAdviceTitle">Otomatis harian</h3>
+              <p class="calc-highlight" id="savingAdviceValue">Rp0 / hari</p>
+              <p id="savingAdviceFormula">Sisa target dibagi jumlah hari menuju tanggal target.</p>
+              <p id="savingAdviceDetail">Pilih saran untuk melihat perhitungannya.</p>
+            </article>
+          </article>
+        </section>
+      </div>
+    </section>
+
+    <section class="page-section" id="sectionFuture" data-section="future">
+      <div class="section-shell">
+        <section class="tool-grid">
+          <article class="tool-card soft">
+            <h2>Kalkulator Financial Freedom</h2>
+            <p>Menggunakan pendekatan FIRE number: biaya hidup tahunan dibagi safe withdrawal rate. Default 4% berarti sekitar 25x pengeluaran tahunan.</p>
+            <div class="form-grid">
+              <div class="form-row"><label for="futureMonthlyExpense">Biaya hidup bulanan</label><input id="futureMonthlyExpense" type="number" min="0" step="10000" value="2500000"></div>
+              <div class="form-row"><label for="futureCurrentInvest">Investasi saat ini</label><input id="futureCurrentInvest" type="number" min="0" step="10000" value="1000000"></div>
+              <div class="form-row"><label for="futureMonthlyInvest">Investasi bulanan</label><input id="futureMonthlyInvest" type="number" min="0" step="10000" value="300000"></div>
+              <div class="form-row"><label for="futureReturn">Estimasi return / tahun</label><input id="futureReturn" type="number" min="0" max="30" step="0.1" value="7"></div>
+              <div class="form-row"><label for="futureWithdrawalRate">Withdrawal rate</label><select id="futureWithdrawalRate"><option value="0.04">4% standar 25x</option><option value="0.035">3,5% konservatif</option><option value="0.03">3% sangat konservatif</option></select></div>
+            </div>
+          </article>
+          <article class="tool-card">
+            <h2>Hasil masa depan</h2>
+            <p id="futureSummary">Hitung target aset agar pengeluaran bisa ditopang dari portofolio.</p>
+            <div class="result-grid">
+              <article class="result-card"><p class="result-label">Target aset</p><p class="result-value" id="futureTarget">Rp0</p><p class="result-note">Perkiraan angka financial freedom.</p></article>
+              <article class="result-card"><p class="result-label">Jarak target</p><p class="result-value" id="futureGap">Rp0</p><p class="result-note">Selisih dari investasi sekarang.</p></article>
+              <article class="result-card"><p class="result-label">Estimasi waktu</p><p class="result-value" id="futureTimeline">0 tahun</p><p class="result-note">Berdasarkan return dan investasi bulanan.</p></article>
+            </div>
+            <div class="detail-grid" aria-label="Detail financial freedom">
+              <article class="detail-card"><strong>Apa itu financial freedom?</strong><span>Financial freedom berarti aset produktif atau pemasukan pasif sudah cukup untuk membiayai gaya hidup utama tanpa bergantung penuh pada kerja aktif.</span></article>
+              <article class="detail-card"><strong>Rumus yang dipakai dashboard</strong><span id="futureFormulaDetail">Biaya hidup tahunan dibagi withdrawal rate. Jika withdrawal rate 4%, target aset sekitar 25x pengeluaran tahunan.</span></article>
+              <article class="detail-card"><strong>Cara membaca timeline</strong><span id="futureTimelineDetail">Estimasi waktu memakai investasi saat ini, investasi bulanan, dan asumsi return tahunan. Hasil berubah jika input berubah.</span></article>
+              <article class="detail-card"><strong>Prioritas sebelum mengejar FIRE</strong><span>Amankan dana darurat, hindari utang konsumtif mahal, naikkan pemasukan, lalu investasikan surplus secara konsisten dan terdiversifikasi.</span></article>
+            </div>
+            <ul class="tip-list">
+              <li>Orang yang mengejar financial freedom biasanya menjaga gap besar antara pemasukan dan gaya hidup.</li>
+              <li>Naikkan pemasukan produktif sebelum menaikkan standar hidup agar rasio menabung ikut naik.</li>
+              <li>Gunakan investasi terdiversifikasi dan biaya rendah, lalu evaluasi target setahun sekali.</li>
+              <li>Angka ini simulasi edukasi, bukan jaminan hasil investasi.</li>
+            </ul>
+            <ul class="source-list">
+              <li><a href="https://www.investopedia.com/terms/f/financial-independence-retire-early-fire.asp" target="_blank" rel="noreferrer">FIRE number</a>: banyak praktisi memakai target sekitar 25x pengeluaran tahunan.</li>
+              <li><a href="https://en.wikipedia.org/wiki/4%25_rule" target="_blank" rel="noreferrer">4% rule</a> dan <a href="https://en.wikipedia.org/wiki/Trinity_study" target="_blank" rel="noreferrer">Trinity Study</a>: gunakan sebagai titik awal, bukan jaminan pasti.</li>
+              <li>Gunakan withdrawal rate lebih konservatif jika target pensiun sangat panjang, inflasi tinggi, atau pemasukan pasif belum stabil.</li>
+            </ul>
+          </article>
+        </section>
+      </div>
+    </section>
+
+    <p class="small-note">Catatan: dashboard ini untuk edukasi literasi keuangan, bukan nasihat investasi personal. Sesuaikan dengan risiko, tanggungan, dan aturan produk keuangan yang berlaku.</p>
+  </main>
+
+  <script>
+    const presets = {
+      pelajar: {
+        incomeAllowance: 800000, incomePartTime: 250000, incomeProject: 150000, incomeOther: 0,
+        expenseFood: 320000, expenseSchool: 180000, expenseInternet: 90000, expenseFamily: 50000,
+        expenseFun: 160000, expenseShopping: 120000, expenseSubs: 40000,
+        emergencyNow: 250000, emergencyMonths: 2, investRate: 3
+      },
+      mahasiswa: {
+        incomeAllowance: 1800000, incomePartTime: 700000, incomeProject: 500000, incomeOther: 0,
+        expenseFood: 950000, expenseSchool: 350000, expenseInternet: 150000, expenseFamily: 150000,
+        expenseFun: 450000, expenseShopping: 300000, expenseSubs: 80000,
+        emergencyNow: 1200000, emergencyMonths: 3, investRate: 5
+      },
+      firstJobber: {
+        incomeAllowance: 0, incomePartTime: 5600000, incomeProject: 650000, incomeOther: 250000,
+        expenseFood: 1800000, expenseSchool: 350000, expenseInternet: 220000, expenseFamily: 650000,
+        expenseFun: 950000, expenseShopping: 650000, expenseSubs: 180000,
+        emergencyNow: 5000000, emergencyMonths: 4, investRate: 10
+      }
+    };
+
+    const incomeFields = [
+      ["Uang saku / beasiswa", "incomeAllowance", "#7c5cff"],
+      ["Kerja paruh waktu", "incomePartTime", "#19a391"],
+      ["Freelance / proyek", "incomeProject", "#e7a333"],
+      ["Lainnya", "incomeOther", "#e35f7e"]
+    ];
+
+    const expenseFields = [
+      ["Makan & transport", "expenseFood", "#7c5cff", "need"],
+      ["Sekolah / kuliah", "expenseSchool", "#4f7cff", "need"],
+      ["Internet / kuota", "expenseInternet", "#19a391", "need"],
+      ["Bantu keluarga", "expenseFamily", "#59b37b", "need"],
+      ["Hiburan / nongkrong", "expenseFun", "#e7a333", "want"],
+      ["Belanja pribadi", "expenseShopping", "#e35f7e", "want"],
+      ["Langganan digital", "expenseSubs", "#7c3aed", "want"]
+    ];
+
+    const palette = ["#7c5cff", "#4f7cff", "#19a391", "#e7a333", "#e35f7e", "#7c3aed", "#475569"];
+    const SUPABASE_URL = "https://kuxeakfptwxagluqmnlv.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1eGVha2ZwdHd4YWdsdXFtbmx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNjU0MDMsImV4cCI6MjA5Nzc0MTQwM30.wzgEYvzydeuOuBN5E47Gjd7WQzgvnCUo52GJoJwfSr8";
+    const TABLE_NAME = "finance_budget_plans";
+    const APP_VERSION = "student-finance-dashboard-v2";
+    let activeSavingAdvice = "daily";
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function numberValue(id) {
+      const value = Number(byId(id).value);
+      return Number.isFinite(value) ? Math.max(0, value) : 0;
+    }
+
+    function textValue(id) {
+      const element = byId(id);
+      return element ? String(element.value || "").trim() : "";
+    }
+
+    function setStatus(message, tone) {
+      const status = byId("saveStatus");
+      status.textContent = message;
+      status.classList.remove("status-good", "status-warn", "status-bad");
+      if (tone) status.classList.add(tone);
+    }
+
+    function formatIdr(value) {
+      return "Rp" + Math.round(value).toLocaleString("id-ID");
+    }
+
+    function formatPct(value) {
+      if (!Number.isFinite(value)) return "0%";
+      return Math.round(value * 100) + "%";
+    }
+
+    function setPreset(name) {
+      const preset = presets[name] || presets.pelajar;
+      Object.keys(preset).forEach(function(key) {
+        const input = byId(key);
+        if (input) input.value = preset[key];
+      });
+      if (name !== "custom") {
+        byId("planName").value = "Budget " + byId("profilePreset").selectedOptions[0].textContent;
+      }
+      calculate();
+    }
+
+    function escapeText(value) {
+      return String(value).replace(/[&<>"']/g, function(char) {
+        return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char];
+      });
+    }
+
+    function polar(cx, cy, r, angle) {
+      const radians = (angle - 90) * Math.PI / 180;
+      return { x: cx + r * Math.cos(radians), y: cy + r * Math.sin(radians) };
+    }
+
+    function arcPath(cx, cy, outerR, innerR, startAngle, endAngle) {
+      const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+      const startOuter = polar(cx, cy, outerR, endAngle);
+      const endOuter = polar(cx, cy, outerR, startAngle);
+      const startInner = polar(cx, cy, innerR, startAngle);
+      const endInner = polar(cx, cy, innerR, endAngle);
+      return [
+        "M", startOuter.x, startOuter.y,
+        "A", outerR, outerR, 0, largeArc, 0, endOuter.x, endOuter.y,
+        "L", startInner.x, startInner.y,
+        "A", innerR, innerR, 0, largeArc, 1, endInner.x, endInner.y,
+        "Z"
+      ].join(" ");
+    }
+
+    function drawDonut(targetId, rows, centerLabel, centerValue) {
+      const total = rows.reduce(function(sum, row) { return sum + Math.max(0, row.value); }, 0);
+      let angle = 0;
+      let paths = "";
+      rows.forEach(function(row, index) {
+        const slice = total > 0 ? row.value / total * 360 : 0;
+        const end = angle + slice;
+        if (slice > 0.01) {
+          paths += '<path d="' + arcPath(170, 158, 118, 68, angle, end) + '" fill="' + row.color + '"></path>';
+        }
+        angle = end;
+      });
+      const legend = rows.map(function(row) {
+        const pct = total > 0 ? row.value / total : 0;
+        return '<g class="legend"><rect x="348" y="' + row.y + '" width="12" height="12" rx="3" fill="' + row.color + '"></rect><text x="368" y="' + (row.y + 11) + '">' + escapeText(row.label) + ' ' + formatPct(pct) + '</text><text x="368" y="' + (row.y + 29) + '" class="bar-label">' + escapeText(formatIdr(row.value)) + '</text></g>';
+      }).join("");
+      byId(targetId).innerHTML =
+        '<svg viewBox="0 0 640 330" role="img" aria-label="Pie chart alokasi uang">' +
+        paths +
+        '<circle cx="170" cy="158" r="66" fill="#ffffff"></circle>' +
+        '<text x="170" y="150" text-anchor="middle" class="tick-label">' + escapeText(centerLabel) + '</text>' +
+        '<text x="170" y="176" text-anchor="middle" class="bar-label">' + escapeText(centerValue) + '</text>' +
+        legend +
+        '</svg>';
+    }
+
+    function drawBarChart(targetId, rows, maxValue, ariaLabel) {
+      const chartWidth = 640;
+      const left = 176;
+      const top = 22;
+      const rowHeight = 38;
+      const barWidth = 330;
+      const valueX = chartWidth - 12;
+      const height = Math.max(260, rows.length * rowHeight + 58);
+      const safeMax = Math.max(maxValue, 1);
+      let body = '<svg viewBox="0 0 ' + chartWidth + ' ' + height + '" role="img" aria-label="' + escapeText(ariaLabel) + '">';
+      rows.forEach(function(row, index) {
+        const y = top + index * rowHeight;
+        const width = Math.max(2, row.value / safeMax * barWidth);
+        body += '<text x="0" y="' + (y + 18) + '" class="tick-label">' + escapeText(row.label) + '</text>';
+        body += '<rect x="' + left + '" y="' + (y + 4) + '" width="' + barWidth + '" height="18" rx="5" fill="#ebe7ff"></rect>';
+        body += '<rect x="' + left + '" y="' + (y + 4) + '" width="' + width + '" height="18" rx="5" fill="' + row.color + '"></rect>';
+        body += '<text x="' + valueX + '" y="' + (y + 18) + '" class="bar-label" text-anchor="end">' + escapeText(formatIdr(row.value)) + '</text>';
+      });
+      body += '<text x="' + left + '" y="' + (height - 10) + '" class="axis-title">Kategori</text>';
+      body += '<text x="' + valueX + '" y="' + (height - 10) + '" class="axis-title" text-anchor="end">Nominal</text>';
+      body += '</svg>';
+      byId(targetId).innerHTML = body;
+    }
+
+    function drawProjection(rows, target) {
+      const width = 640;
+      const height = 320;
+      const left = 74;
+      const right = 22;
+      const top = 20;
+      const bottom = 50;
+      const plotW = width - left - right;
+      const plotH = height - top - bottom;
+      const maxValue = Math.max(target, rows.reduce(function(max, row) { return Math.max(max, row.value); }, 0), 1);
+      function x(index) { return left + index / (rows.length - 1) * plotW; }
+      function y(value) { return top + plotH - value / maxValue * plotH; }
+      const points = rows.map(function(row, index) { return x(index) + "," + y(row.value); }).join(" ");
+      const targetY = y(target);
+      let labels = "";
+      rows.forEach(function(row, index) {
+        if (index % 3 === 0) labels += '<text x="' + x(index) + '" y="' + (height - 12) + '" text-anchor="middle" class="tick-label">' + index + '</text>';
+      });
+      const halfY = y(maxValue / 2);
+      byId("projectionChart").innerHTML =
+        '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Proyeksi dana darurat">' +
+        '<line x1="' + left + '" y1="' + top + '" x2="' + (width - right) + '" y2="' + top + '" class="grid-line"></line>' +
+        '<line x1="' + left + '" y1="' + halfY + '" x2="' + (width - right) + '" y2="' + halfY + '" class="grid-line"></line>' +
+        '<line x1="' + left + '" y1="' + targetY + '" x2="' + (width - right) + '" y2="' + targetY + '" stroke="#e7a333" stroke-width="2" stroke-dasharray="6 5"></line>' +
+        '<text x="' + left + '" y="' + (targetY - 8) + '" class="line-label">Target ' + escapeText(formatIdr(target)) + '</text>' +
+        '<line x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + (height - bottom) + '" class="axis"></line>' +
+        '<line x1="' + left + '" y1="' + (height - bottom) + '" x2="' + (width - right) + '" y2="' + (height - bottom) + '" class="axis"></line>' +
+        '<text x="8" y="' + (top + 4) + '" class="tick-label">' + escapeText(formatIdr(maxValue)) + '</text>' +
+        '<text x="8" y="' + (halfY + 4) + '" class="tick-label">' + escapeText(formatIdr(maxValue / 2)) + '</text>' +
+        '<text x="' + left + '" y="' + (height - 32) + '" class="axis-title">Bulan ke-</text>' +
+        '<polyline fill="none" stroke="#19a391" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="' + points + '"></polyline>' +
+        rows.map(function(row, index) { return '<circle cx="' + x(index) + '" cy="' + y(row.value) + '" r="4" fill="#ffffff" stroke="#19a391" stroke-width="3"></circle>'; }).join("") +
+        labels +
+        '</svg>';
+    }
+
+    function updateClass(element, statusClass) {
+      element.classList.remove("status-good", "status-warn", "status-bad");
+      element.classList.add(statusClass);
+    }
+
+    function calculate() {
+      const incomeRows = incomeFields.map(function(item) {
+        return { label: item[0], value: numberValue(item[1]), color: item[2] };
+      });
+      const expenseRows = expenseFields.map(function(item) {
+        return { label: item[0], value: numberValue(item[1]), color: item[2], type: item[3] };
+      });
+
+      const income = incomeRows.reduce(function(sum, row) { return sum + row.value; }, 0);
+      const expenses = expenseRows.reduce(function(sum, row) { return sum + row.value; }, 0);
+      const needs = expenseRows.filter(function(row) { return row.type === "need"; }).reduce(function(sum, row) { return sum + row.value; }, 0);
+      const wants = expenseRows.filter(function(row) { return row.type === "want"; }).reduce(function(sum, row) { return sum + row.value; }, 0);
+      const surplus = income - expenses;
+      const investRate = numberValue("investRate") / 100;
+      const plannedInvest = income * investRate;
+      const investing = Math.max(0, Math.min(plannedInvest, Math.max(0, surplus)));
+      const cashSaving = Math.max(0, surplus - investing);
+      const saveRate = income > 0 ? surplus / income : 0;
+      const emergencyNow = numberValue("emergencyNow");
+      const emergencyMonths = numberValue("emergencyMonths");
+      const emergencyTarget = expenses * emergencyMonths;
+      const emergencyProgress = emergencyTarget > 0 ? Math.min(1, emergencyNow / emergencyTarget) : 1;
+      const gap = Math.max(0, emergencyTarget - emergencyNow);
+      const monthsToTarget = surplus > 0 ? Math.ceil(gap / surplus) : null;
+
+      byId("emergencyMonthsOut").textContent = emergencyMonths + "x";
+      byId("investRateOut").textContent = Math.round(investRate * 100) + "%";
+      byId("kpiIncome").textContent = formatIdr(income);
+      byId("kpiSurplus").textContent = formatIdr(surplus);
+      byId("kpiSaveRate").textContent = formatPct(saveRate);
+      byId("kpiEmergency").textContent = formatPct(emergencyProgress);
+
+      const surplusEl = byId("kpiSurplus");
+      const saveEl = byId("kpiSaveRate");
+      updateClass(surplusEl, surplus < 0 ? "status-bad" : surplus / Math.max(income, 1) >= 0.2 ? "status-good" : "status-warn");
+      updateClass(saveEl, saveRate >= 0.2 ? "status-good" : saveRate >= 0.1 ? "status-warn" : "status-bad");
+
+      byId("surplusNote").textContent = surplus >= 0
+        ? "Bisa dialihkan ke dana darurat dan investasi."
+        : "Pengeluaran lebih besar dari pemasukan.";
+      byId("emergencyNote").textContent = monthsToTarget == null
+        ? "Perlu surplus positif untuk mengejar target."
+        : monthsToTarget === 0
+          ? "Target dana darurat sudah tercapai."
+          : "Perkiraan tercapai dalam " + monthsToTarget + " bulan.";
+
+      const healthTitle = byId("healthTitle");
+      const healthAdvice = byId("healthAdvice");
+      if (surplus < 0) {
+        healthTitle.textContent = "Status: defisit bulanan";
+        healthAdvice.textContent = "Prioritaskan kebutuhan belajar dan transport, lalu turunkan hiburan atau belanja pribadi sampai sisa uang kembali positif.";
+      } else if (saveRate < 0.1) {
+        healthTitle.textContent = "Status: mulai stabil, tapi ruang aman tipis";
+        healthAdvice.textContent = "Naikkan sisa uang ke minimal 10 persen pemasukan sebelum menambah cicilan atau langganan baru.";
+      } else if (emergencyProgress < 1) {
+        healthTitle.textContent = "Status: sehat untuk tahap awal";
+        healthAdvice.textContent = "Arahkan surplus ke dana darurat sampai target tercapai, lalu naikkan investasi rutin secara bertahap.";
+      } else {
+        healthTitle.textContent = "Status: siap naik level";
+        healthAdvice.textContent = "Dana darurat sudah kuat. Pertahankan sistem otomatis dan fokus pada investasi rutin berbiaya rendah.";
+      }
+
+      const donutRows = [
+        { label: "Kebutuhan", value: needs, color: "#7c5cff", y: 62 },
+        { label: "Keinginan", value: wants, color: "#e7a333", y: 112 },
+        { label: "Tabungan", value: cashSaving, color: "#19a391", y: 162 },
+        { label: "Investasi", value: investing, color: "#e35f7e", y: 212 }
+      ];
+      drawDonut("donutChart", donutRows, "Sisa uang", formatIdr(Math.max(0, surplus)));
+      drawBarChart("expenseChart", expenseRows.sort(function(a, b) { return b.value - a.value; }), Math.max.apply(null, expenseRows.map(function(row) { return row.value; })), "Diagram batang pengeluaran");
+      drawBarChart("incomeChart", incomeRows.sort(function(a, b) { return b.value - a.value; }), Math.max.apply(null, incomeRows.map(function(row) { return row.value; })), "Diagram batang pemasukan");
+
+      const projectionRows = [];
+      for (let month = 0; month <= 12; month += 1) {
+        projectionRows.push({ month: month, value: emergencyNow + Math.max(0, surplus) * month });
+      }
+      drawProjection(projectionRows, emergencyTarget);
+    }
+
+    function getBudgetSnapshot() {
+      const incomes = Object.fromEntries(incomeFields.map(function(item) {
+        return [item[1], numberValue(item[1])];
+      }));
+      const expenses = Object.fromEntries(expenseFields.map(function(item) {
+        return [item[1], numberValue(item[1])];
+      }));
+      const incomeTotal = Object.values(incomes).reduce(function(sum, value) { return sum + value; }, 0);
+      const expenseTotal = Object.values(expenses).reduce(function(sum, value) { return sum + value; }, 0);
+      const surplus = incomeTotal - expenseTotal;
+      const emergencyNow = numberValue("emergencyNow");
+      const emergencyMonths = numberValue("emergencyMonths");
+      const investRate = numberValue("investRate") / 100;
+      const emergencyTarget = expenseTotal * emergencyMonths;
+      const emergencyGap = Math.max(0, emergencyTarget - emergencyNow);
+      return {
+        data: {
+          profilePreset: byId("profilePreset").value,
+          ownerName: textValue("ownerName"),
+          planName: textValue("planName"),
+          inputs: {
+            incomes,
+            expenses,
+            emergencyNow,
+            emergencyMonths,
+            investRatePercent: numberValue("investRate")
+          },
+          savingPlan: {
+            goalName: textValue("savingGoalName"),
+            targetAmount: numberValue("savingTargetAmount"),
+            currentAmount: numberValue("savingCurrentAmount"),
+            targetDate: byId("savingTargetDate").value,
+            dailyAbility: numberValue("savingDailyAbility")
+          },
+          futurePlan: {
+            monthlyExpense: numberValue("futureMonthlyExpense"),
+            currentInvest: numberValue("futureCurrentInvest"),
+            monthlyInvest: numberValue("futureMonthlyInvest"),
+            annualReturnPercent: numberValue("futureReturn"),
+            withdrawalRate: byId("futureWithdrawalRate").value
+          }
+        },
+        computed: {
+          incomeTotal,
+          expenseTotal,
+          surplus,
+          saveRate: incomeTotal > 0 ? surplus / incomeTotal : 0,
+          emergencyTarget,
+          emergencyGap,
+          monthsToEmergencyTarget: surplus > 0 ? Math.ceil(emergencyGap / surplus) : null,
+          plannedMonthlyInvestment: Math.max(0, Math.min(incomeTotal * investRate, Math.max(0, surplus)))
+        }
+      };
+    }
+
+    function applyBudgetSnapshot(savedData) {
+      const inputs = savedData && savedData.inputs ? savedData.inputs : {};
+      Object.entries(inputs.incomes || {}).forEach(function(entry) {
+        if (byId(entry[0])) byId(entry[0]).value = entry[1];
+      });
+      Object.entries(inputs.expenses || {}).forEach(function(entry) {
+        if (byId(entry[0])) byId(entry[0]).value = entry[1];
+      });
+      if (byId("emergencyNow")) byId("emergencyNow").value = inputs.emergencyNow || 0;
+      if (byId("emergencyMonths")) byId("emergencyMonths").value = inputs.emergencyMonths || 3;
+      if (byId("investRate")) byId("investRate").value = inputs.investRatePercent || 0;
+      byId("profilePreset").value = savedData.profilePreset || "custom";
+      if (byId("ownerName")) byId("ownerName").value = savedData.ownerName || textValue("ownerName");
+      byId("planName").value = savedData.planName || "Budget tersimpan";
+      const savingPlan = savedData.savingPlan || {};
+      if (byId("savingGoalName")) byId("savingGoalName").value = savingPlan.goalName || byId("savingGoalName").value;
+      if (byId("savingTargetAmount")) byId("savingTargetAmount").value = savingPlan.targetAmount || byId("savingTargetAmount").value;
+      if (byId("savingCurrentAmount")) byId("savingCurrentAmount").value = savingPlan.currentAmount || 0;
+      if (byId("savingTargetDate") && savingPlan.targetDate) byId("savingTargetDate").value = savingPlan.targetDate;
+      if (byId("savingDailyAbility")) byId("savingDailyAbility").value = savingPlan.dailyAbility || byId("savingDailyAbility").value;
+      const futurePlan = savedData.futurePlan || {};
+      if (byId("futureMonthlyExpense")) byId("futureMonthlyExpense").value = futurePlan.monthlyExpense || byId("futureMonthlyExpense").value;
+      if (byId("futureCurrentInvest")) byId("futureCurrentInvest").value = futurePlan.currentInvest || 0;
+      if (byId("futureMonthlyInvest")) byId("futureMonthlyInvest").value = futurePlan.monthlyInvest || byId("futureMonthlyInvest").value;
+      if (byId("futureReturn")) byId("futureReturn").value = futurePlan.annualReturnPercent || byId("futureReturn").value;
+      if (byId("futureWithdrawalRate") && futurePlan.withdrawalRate) byId("futureWithdrawalRate").value = futurePlan.withdrawalRate;
+      updateAccessCodePreview();
+      calculate();
+      updateSavingPlanner();
+      updateFuturePlanner();
+    }
+
+    function slugifyAccessName(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function normalizedSaveCode() {
+      return slugifyAccessName(textValue("ownerName"));
+    }
+
+    function updateAccessCodePreview() {
+      const code = normalizedSaveCode();
+      byId("saveCode").value = code;
+      byId("accessCodePreview").textContent = code
+        ? "Kode akses database: " + code
+        : "Kode akses akan dibuat otomatis dari nama.";
+      return code;
+    }
+
+    function ensureSaveCode() {
+      const code = updateAccessCodePreview();
+      if (code.length < 2) {
+        throw new Error("Isi nama akses terlebih dahulu sebelum menyimpan atau memuat data.");
+      }
+      return code;
+    }
+
+    function supabaseHeaders(saveCode) {
+      return {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": "application/json",
+        "x-budget-save-code": saveCode
+      };
+    }
+
+    async function saveBudgetPlan() {
+      try {
+        const saveCode = ensureSaveCode();
+        const snapshot = getBudgetSnapshot();
+        const planName = snapshot.data.planName || "Budget tanpa nama";
+        setStatus("Menyimpan ke Supabase...", "status-warn");
+        const response = await fetch(SUPABASE_URL + "/rest/v1/" + TABLE_NAME, {
+          method: "POST",
+          headers: {
+            ...supabaseHeaders(saveCode),
+            "Prefer": "return=representation"
+          },
+          body: JSON.stringify({
+            plan_name: planName,
+            save_code: saveCode,
+            app_version: APP_VERSION,
+            data: snapshot.data,
+            computed: snapshot.computed
+          })
+        });
+        const body = await response.json().catch(function() { return null; });
+        if (!response.ok) {
+          throw new Error(body && body.message ? body.message : "Gagal menyimpan data.");
+        }
+        const saved = Array.isArray(body) ? body[0] : body;
+        setStatus("Tersimpan ke database. ID: " + (saved && saved.id ? saved.id : "baru"), "status-good");
+      } catch (error) {
+        setStatus(error.message || "Gagal menyimpan ke database.", "status-bad");
+      }
+    }
+
+    async function loadBudgetPlan() {
+      try {
+        const saveCode = ensureSaveCode();
+        setStatus("Memuat data dari Supabase...", "status-warn");
+        const url = SUPABASE_URL + "/rest/v1/" + TABLE_NAME +
+          "?select=id,plan_name,save_code,data,computed,updated_at&save_code=eq." +
+          encodeURIComponent(saveCode) + "&order=updated_at.desc&limit=1";
+        const response = await fetch(url, {
+          method: "GET",
+          headers: supabaseHeaders(saveCode)
+        });
+        const rows = await response.json().catch(function() { return null; });
+        if (!response.ok) {
+          throw new Error(rows && rows.message ? rows.message : "Gagal memuat data.");
+        }
+        if (!Array.isArray(rows) || rows.length === 0) {
+          throw new Error("Tidak ada data untuk kode simpan ini.");
+        }
+        applyBudgetSnapshot(rows[0].data);
+        setStatus("Data dimuat: " + rows[0].plan_name + " (" + new Date(rows[0].updated_at).toLocaleString("id-ID") + ")", "status-good");
+      } catch (error) {
+        setStatus(error.message || "Gagal memuat data.", "status-bad");
+      }
+    }
+
+    function clearAccessName() {
+      byId("ownerName").value = "";
+      updateAccessCodePreview();
+      setStatus("Nama akses dikosongkan. Isi nama untuk menyimpan atau memuat data.", "status-warn");
+    }
+
+    function showAdviceTab(tabName) {
+      document.querySelectorAll("[data-advice-tab]").forEach(function(button) {
+        const isActive = button.dataset.adviceTab === tabName;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+      document.querySelectorAll("[data-advice-panel]").forEach(function(panel) {
+        const isActive = panel.dataset.advicePanel === tabName;
+        panel.classList.toggle("active", isActive);
+        panel.hidden = !isActive;
+      });
+    }
+
+    function showMainSection(sectionName) {
+      document.querySelectorAll("[data-main-section]").forEach(function(button) {
+        button.classList.toggle("active", button.dataset.mainSection === sectionName);
+      });
+      document.querySelectorAll("[data-section]").forEach(function(section) {
+        section.classList.toggle("active", section.dataset.section === sectionName);
+      });
+    }
+
+    function toggleInfo(targetId, button) {
+      const target = byId(targetId);
+      if (!target) return;
+      const active = !target.classList.contains("active");
+      target.classList.toggle("active", active);
+      if (button) button.classList.toggle("active", active);
+    }
+
+    function setDefaultSavingDate() {
+      const input = byId("savingTargetDate");
+      if (!input || input.value) return;
+      const date = new Date();
+      date.setDate(date.getDate() + 90);
+      input.value = date.toISOString().slice(0, 10);
+    }
+
+    function daysUntil(dateValue) {
+      const target = new Date(dateValue + "T00:00:00");
+      if (Number.isNaN(target.getTime())) return 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return Math.max(1, Math.ceil((target - today) / 86400000));
+    }
+
+    function getSavingState() {
+      const targetName = textValue("savingGoalName") || "target";
+      const targetAmount = numberValue("savingTargetAmount");
+      const currentAmount = numberValue("savingCurrentAmount");
+      const dailyAbility = numberValue("savingDailyAbility");
+      const targetDate = byId("savingTargetDate").value;
+      const remaining = Math.max(0, targetAmount - currentAmount);
+      const daysToDate = daysUntil(targetDate);
+      const dailyNeed = daysToDate > 0 ? Math.ceil(remaining / daysToDate) : remaining;
+      const weeksToDate = Math.max(1, Math.ceil(daysToDate / 7));
+      const weeklyNeed = Math.ceil(remaining / weeksToDate);
+      const daysNeeded = dailyAbility > 0 ? Math.ceil(remaining / dailyAbility) : null;
+      const progress = targetAmount > 0 ? Math.min(100, currentAmount / targetAmount * 100) : 0;
+      return {
+        targetName,
+        targetAmount,
+        currentAmount,
+        dailyAbility,
+        targetDate,
+        remaining,
+        daysToDate,
+        dailyNeed,
+        weeksToDate,
+        weeklyNeed,
+        daysNeeded,
+        progress
+      };
+    }
+
+    function futureDateFromToday(days) {
+      const date = new Date();
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() + Math.max(0, days));
+      return date.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+    }
+
+    function renderSavingAdvice(type) {
+      const state = getSavingState();
+      activeSavingAdvice = type || activeSavingAdvice || "daily";
+      document.querySelectorAll("[data-saving-advice-item]").forEach(function(item) {
+        item.classList.toggle("active", item.dataset.savingAdviceItem === activeSavingAdvice);
+      });
+
+      let title = "Otomatis harian";
+      let value = formatIdr(state.dailyNeed) + " / hari";
+      let formula = "Sisa target " + formatIdr(state.remaining) + " dibagi " + state.daysToDate + " hari = " + formatIdr(state.dailyNeed) + " per hari.";
+      let detail = "Pisahkan nominal ini setiap hari di rekening atau dompet khusus agar uang target tidak tercampur dengan uang jajan.";
+
+      if (activeSavingAdvice === "weekly") {
+        title = "Milestone mingguan";
+        value = formatIdr(state.weeklyNeed) + " / minggu";
+        formula = "Sisa target " + formatIdr(state.remaining) + " dibagi " + state.weeksToDate + " minggu = " + formatIdr(state.weeklyNeed) + " per minggu.";
+        detail = "Gunakan angka mingguan sebagai checkpoint. Jika minggu ini kurang, tutup selisihnya di minggu berikutnya sebelum target makin jauh.";
+      } else if (activeSavingAdvice === "buffer") {
+        const bufferTarget = Math.ceil(state.targetAmount * 1.15);
+        const bufferRemaining = Math.max(0, bufferTarget - state.currentAmount);
+        const bufferDaily = state.daysToDate > 0 ? Math.ceil(bufferRemaining / state.daysToDate) : bufferRemaining;
+        title = "Tambah buffer 15%";
+        value = formatIdr(bufferDaily) + " / hari";
+        formula = "Target dengan buffer: " + formatIdr(state.targetAmount) + " x 115% = " + formatIdr(bufferTarget) + ". Sisa " + formatIdr(bufferRemaining) + " dibagi " + state.daysToDate + " hari.";
+        detail = "Buffer berguna untuk biaya tambahan seperti ongkir, transport lokal, makan, tiket, atau kenaikan harga sebelum hari pembelian.";
+      } else if (activeSavingAdvice === "ability") {
+        const estimated = state.daysNeeded == null ? "belum bisa dihitung" : futureDateFromToday(state.daysNeeded);
+        const status = state.daysNeeded != null && state.daysNeeded <= state.daysToDate
+          ? "Kemampuan harianmu cukup untuk mencapai target sebelum tanggal tujuan."
+          : "Kemampuan harianmu belum cukup untuk tanggal tujuan; naikkan setoran harian atau mundurkan target.";
+        title = "Ikuti kemampuan harian";
+        value = state.daysNeeded == null ? "Isi kemampuan" : state.daysNeeded + " hari";
+        formula = state.dailyAbility > 0
+          ? "Sisa target " + formatIdr(state.remaining) + " dibagi kemampuan " + formatIdr(state.dailyAbility) + " per hari = " + value + "."
+          : "Isi nominal mampu nabung per hari agar estimasi waktu bisa dihitung.";
+        detail = state.daysNeeded == null ? "Masukkan kemampuan nabung harian untuk melihat estimasi tanggal selesai." : status + " Estimasi selesai: " + estimated + ".";
+      }
+
+      byId("savingAdviceTitle").textContent = title;
+      byId("savingAdviceValue").textContent = value;
+      byId("savingAdviceFormula").textContent = formula;
+      byId("savingAdviceDetail").textContent = detail;
+    }
+
+    function updateSavingPlanner() {
+      const state = getSavingState();
+
+      byId("savingRemaining").textContent = formatIdr(state.remaining);
+      byId("savingDailyNeed").textContent = formatIdr(state.dailyNeed);
+      byId("savingDaysNeeded").textContent = state.daysNeeded == null ? "Belum ada" : state.daysNeeded + " hari";
+      byId("savingProgress").style.width = state.progress + "%";
+      byId("savingSummary").textContent = state.remaining === 0
+        ? state.targetName + " sudah tercapai. Pertahankan uangnya sampai waktu membeli."
+        : "Untuk " + state.targetName + ", sisihkan sekitar " + formatIdr(state.dailyNeed) + " per hari agar tepat waktu.";
+      renderSavingAdvice(activeSavingAdvice);
+    }
+
+    function formatTimeline(months) {
+      if (months == null) return "Belum cukup";
+      if (months <= 0) return "Sudah tercapai";
+      const years = Math.floor(months / 12);
+      const rest = months % 12;
+      if (years <= 0) return rest + " bulan";
+      return years + " tahun " + rest + " bulan";
+    }
+
+    function monthsToFutureValue(target, current, monthlyContribution, annualReturn) {
+      if (current >= target) return 0;
+      if (monthlyContribution <= 0 && annualReturn <= 0) return null;
+      const monthlyReturn = Math.pow(1 + annualReturn, 1 / 12) - 1;
+      if (monthlyReturn <= 0) {
+        return monthlyContribution > 0 ? Math.ceil((target - current) / monthlyContribution) : null;
+      }
+      if (monthlyContribution <= 0) {
+        return Math.ceil(Math.log(target / Math.max(current, 1)) / Math.log(1 + monthlyReturn));
+      }
+      const numerator = target * monthlyReturn + monthlyContribution;
+      const denominator = Math.max(current, 0) * monthlyReturn + monthlyContribution;
+      return Math.ceil(Math.log(numerator / denominator) / Math.log(1 + monthlyReturn));
+    }
+
+    function updateFuturePlanner() {
+      const monthlyExpense = numberValue("futureMonthlyExpense");
+      const currentInvest = numberValue("futureCurrentInvest");
+      const monthlyInvest = numberValue("futureMonthlyInvest");
+      const annualReturn = numberValue("futureReturn") / 100;
+      const withdrawalRate = Number(byId("futureWithdrawalRate").value) || 0.04;
+      const annualExpense = monthlyExpense * 12;
+      const target = withdrawalRate > 0 ? annualExpense / withdrawalRate : 0;
+      const gap = Math.max(0, target - currentInvest);
+      const months = monthsToFutureValue(target, currentInvest, monthlyInvest, annualReturn);
+
+      byId("futureTarget").textContent = formatIdr(target);
+      byId("futureGap").textContent = formatIdr(gap);
+      byId("futureTimeline").textContent = formatTimeline(months);
+      byId("futureSummary").textContent = "Dengan withdrawal rate " + Math.round(withdrawalRate * 1000) / 10 + "%, target aset sekitar " + formatIdr(target) + ".";
+      byId("futureFormulaDetail").textContent = "Biaya hidup tahunan " + formatIdr(annualExpense) + " dibagi withdrawal rate " + Math.round(withdrawalRate * 1000) / 10 + "% = target aset " + formatIdr(target) + ".";
+      byId("futureTimelineDetail").textContent = "Simulasi memakai investasi awal " + formatIdr(currentInvest) + ", investasi bulanan " + formatIdr(monthlyInvest) + ", dan estimasi return " + Math.round(annualReturn * 1000) / 10 + "% per tahun. Estimasi waktu: " + formatTimeline(months) + ".";
+    }
+
+    function wireInputs() {
+      const budgetInputs = document.querySelectorAll(".input-panel input");
+      budgetInputs.forEach(function(input) {
+        input.addEventListener("input", function() {
+          if (input.id === "ownerName") {
+            updateAccessCodePreview();
+          }
+          if (input.id !== "saveCode" && input.id !== "planName" && input.id !== "ownerName") {
+            byId("profilePreset").value = "custom";
+          }
+          calculate();
+        });
+      });
+      byId("profilePreset").addEventListener("change", function(event) {
+        if (event.target.value === "custom") {
+          calculate();
+        } else {
+          setPreset(event.target.value);
+        }
+      });
+      byId("resetButton").addEventListener("click", function() {
+        const value = byId("profilePreset").value === "custom" ? "pelajar" : byId("profilePreset").value;
+        byId("profilePreset").value = value;
+        setPreset(value);
+      });
+      byId("saveToDatabase").addEventListener("click", saveBudgetPlan);
+      byId("loadFromDatabase").addEventListener("click", loadBudgetPlan);
+      byId("clearAccessName").addEventListener("click", clearAccessName);
+      document.querySelectorAll("[data-advice-tab]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          showAdviceTab(button.dataset.adviceTab);
+        });
+      });
+      document.querySelectorAll("[data-main-section]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          showMainSection(button.dataset.mainSection);
+        });
+      });
+      document.querySelectorAll("[data-info-target]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          toggleInfo(button.dataset.infoTarget, button);
+        });
+      });
+      document.querySelectorAll("#sectionSaving input").forEach(function(input) {
+        input.addEventListener("input", updateSavingPlanner);
+      });
+      document.querySelectorAll("[data-saving-advice]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          renderSavingAdvice(button.dataset.savingAdvice);
+        });
+      });
+      document.querySelectorAll("#sectionFuture input, #sectionFuture select").forEach(function(input) {
+        input.addEventListener("input", updateFuturePlanner);
+        input.addEventListener("change", updateFuturePlanner);
+      });
+    }
+
+    wireInputs();
+    setPreset("pelajar");
+    setDefaultSavingDate();
+    updateAccessCodePreview();
+    updateSavingPlanner();
+    updateFuturePlanner();
+  </script>
+</body>
+</html>
